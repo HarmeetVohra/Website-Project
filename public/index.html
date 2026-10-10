@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn your first German words with elegant, simple flashcards and quizzes.">
+  <title>Deutsch Lernen · Learn German with flashcards</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🃏</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <button class="logo" id="logo" type="button" aria-label="Back to home">
+      <span class="logo-mark">Deutsch</span> Lernen
+    </button>
+  </header>
+
+  <main>
+    <!-- Screen 1: Home (choose how to study, pick a deck, or add your own words) -->
+    <section id="home-screen" class="screen">
+      <div class="hero">
+        <p class="eyebrow">Deutsch für Anfänger</p>
+        <h1>Learn your first <em>German</em> words</h1>
+        <p>Pick a topic, flip each card, and see how many words you already know.</p>
+      </div>
+
+      <ol class="how-to">
+        <li><span>1</span> Choose flip cards or a quiz</li>
+        <li><span>2</span> Pick a deck</li>
+        <li><span>3</span> Retry the words you missed</li>
+      </ol>
+
+      <div class="options">
+        <div class="option-group" role="group" aria-labelledby="mode-label">
+          <span id="mode-label" class="option-label">How to study</span>
+          <div class="segmented">
+            <button type="button" class="seg-btn active" data-mode="flip" aria-pressed="true">🃏 Flip cards</button>
+            <button type="button" class="seg-btn" data-mode="quiz" aria-pressed="false">✏️ Quiz</button>
+          </div>
+        </div>
+        <div class="option-group" role="group" aria-labelledby="dir-label">
+          <span id="dir-label" class="option-label">Show first</span>
+          <div class="segmented">
+            <button type="button" class="seg-btn active" data-direction="de" aria-pressed="true">German → English</button>
+            <button type="button" class="seg-btn" data-direction="en" aria-pressed="false">English → German</button>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Choose a deck</h2>
+      <div id="deck-grid" class="deck-grid">
+        <p class="status-message">Loading decks…</p>
+      </div>
+
+      <section class="custom-panel" aria-labelledby="custom-title">
+        <h2 id="custom-title" class="section-title">Add your own words</h2>
+        <p class="hint">Your words stay here until you refresh the page.</p>
+
+        <form id="custom-form" class="custom-form">
+          <label>
+            <span>German</span>
+            <input id="custom-de" type="text" placeholder="e.g. das Haus" maxlength="60" required autocomplete="off">
+          </label>
+          <label>
+            <span>English</span>
+            <input id="custom-en" type="text" placeholder="e.g. the house" maxlength="60" required autocomplete="off">
+          </label>
+          <button type="submit" class="btn btn-secondary">Add word</button>
+        </form>
+
+        <ul id="custom-list" class="custom-list"></ul>
+
+        <button id="study-custom" type="button" class="btn btn-primary" disabled>Study my words</button>
+      </section>
+    </section>
+
+    <!-- Screen 2: Study (flip cards or quiz share this screen) -->
+    <section id="study-screen" class="screen" hidden>
+      <div class="study-top">
+        <button id="back-home" type="button" class="btn btn-ghost">← All decks</button>
+        <p id="progress-text" class="progress-text"></p>
+      </div>
+      <div class="progress-bar" aria-hidden="true"><div id="progress-fill" class="progress-fill"></div></div>
+
+      <h2 id="study-title" class="study-title"></h2>
+
+      <!-- Flip card mode -->
+      <div id="flip-mode">
+        <button id="flashcard" type="button" class="flashcard" aria-live="polite">
+          <span class="card-inner">
+            <span class="card-face card-front">
+              <span id="front-label" class="card-label"></span>
+              <span id="front-word" class="card-word"></span>
+              <span class="card-tip">Tap to flip</span>
+            </span>
+            <span class="card-face card-back">
+              <span id="back-label" class="card-label"></span>
+              <span id="back-word" class="card-word"></span>
+            </span>
+          </span>
+        </button>
+
+        <div id="answer-buttons" class="answer-buttons" hidden>
+          <button id="still-learning" type="button" class="btn btn-learning">🤔 Still learning</button>
+          <button id="knew-it" type="button" class="btn btn-knew">✅ I knew it</button>
+        </div>
+        <p id="flip-hint" class="hint center">Tap the card (or press Space) to see the answer.</p>
+      </div>
+
+      <!-- Quiz mode -->
+      <div id="quiz-mode" hidden>
+        <div class="quiz-prompt">
+          <span id="quiz-label" class="card-label"></span>
+          <span id="quiz-word" class="card-word"></span>
+        </div>
+        <div id="quiz-choices" class="quiz-choices"></div>
+        <p id="quiz-feedback" class="quiz-feedback" aria-live="polite"></p>
+        <button id="quiz-next" type="button" class="btn btn-primary quiz-next" hidden>Next →</button>
+        <p class="hint center">Tip: press 1–4 to answer and Enter for the next word.</p>
+      </div>
+
+      <div class="listen-row">
+        <button id="listen" type="button" class="btn btn-listen" hidden>🔊 Listen</button>
+      </div>
+    </section>
+
+    <!-- Screen 3: Results -->
+    <section id="results-screen" class="screen" hidden>
+      <div class="results-card">
+        <p id="results-emoji" class="results-emoji"></p>
+        <h2 id="results-title"></h2>
+        <p id="results-score" class="results-score"></p>
+        <p id="missed-heading" class="missed-heading">Words to practice:</p>
+        <ul id="missed-list" class="missed-list"></ul>
+        <div class="results-actions">
+          <button id="retry-missed" type="button" class="btn btn-primary">Retry missed words</button>
+          <button id="study-again" type="button" class="btn btn-secondary">Study whole deck again</button>
+          <button id="results-home" type="button" class="btn btn-ghost">Back to decks</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">Made for beginners · Viel Glück!</footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
